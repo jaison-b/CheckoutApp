@@ -26,7 +26,7 @@ namespace CheckoutApp.Repository
 
         public ProductRepository(Stream productsInputStream)
         {
-            _products = ParseProductsInputStream(productsInputStream);
+            _products = AppUtils.ParseCsv<ProductInfo>(productsInputStream, typeof(ProductInfoMapper));
         }
 
         public ProductInfo GetProduct(string productId)
@@ -36,15 +36,6 @@ namespace CheckoutApp.Repository
                     product => string.Equals(product.ProductId, productId, StringComparison.OrdinalIgnoreCase));
         }
 
-        private static IList<ProductInfo> ParseProductsInputStream(Stream productsInputStream)
-        {
-            var csv = new CsvReader(new StreamReader(productsInputStream));
-            csv.Configuration.TrimFields = true;
-            csv.Configuration.TrimHeaders = true;
-            csv.Configuration.RegisterClassMap<ProductInfoMapper>();
-            csv.Configuration.WillThrowOnMissingField = false;
-            return csv.GetRecords<ProductInfo>().ToList();
-        }
     }
 
     internal sealed class ProductInfoMapper : CsvClassMap<ProductInfo>

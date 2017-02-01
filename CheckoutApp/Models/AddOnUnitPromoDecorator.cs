@@ -28,5 +28,28 @@ namespace CheckoutApp.Models
             var discountAmount = decimal.ToInt32(decimal.Multiply(basePrice, discountPercent));
             return basePrice - discountAmount;
         }
+
+        protected bool Equals(AddOnUnitPromoDecorator other)
+        {
+            return GetOrderItem().Equals(other.GetOrderItem()) && _eligibleUnits == other._eligibleUnits && _freeUnits == other._freeUnits;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == this.GetType() && Equals((AddOnUnitPromoDecorator) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = GetOrderItem().GetHashCode();
+                hashCode = (hashCode * 397) ^ _eligibleUnits;
+                hashCode = (hashCode * 397) ^ _freeUnits;
+                return hashCode;
+            }
+        }
     }
 }

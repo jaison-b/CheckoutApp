@@ -17,25 +17,21 @@ namespace CheckoutApp.Repository
     {
         public string ProductId { get; set; }
         public PromoType PromoType { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public int EligibleQuantity { get; set; }
-        public double PromoAmount { get; set; }
+        public DateTime StartDate { get; set; } = DateTime.MinValue;
+        public DateTime EndDate { get; set; } = DateTime.MaxValue;
+        public int EligibleQuantity { get; set; } = 0;
+        public double PromoAmount { get; set; } = 0.00;
 
         protected bool Equals(PromotionInfo other)
         {
-            return string.Equals(ProductId, other.ProductId) &&
-                   PromoType == other.PromoType &&
-                   StartDate.Equals(other.StartDate) &&
-                   EndDate.Equals(other.EndDate) &&
-                   PromoAmount.Equals(other.PromoAmount);
+            return string.Equals(ProductId, other.ProductId) && PromoType == other.PromoType && StartDate.Equals(other.StartDate) && EndDate.Equals(other.EndDate) && EligibleQuantity == other.EligibleQuantity && PromoAmount.Equals(other.PromoAmount);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((PromotionInfo) obj);
+            return obj.GetType() == this.GetType() && Equals((PromotionInfo) obj);
         }
 
         public override int GetHashCode()
@@ -46,6 +42,7 @@ namespace CheckoutApp.Repository
                 hashCode = (hashCode * 397) ^ (int) PromoType;
                 hashCode = (hashCode * 397) ^ StartDate.GetHashCode();
                 hashCode = (hashCode * 397) ^ EndDate.GetHashCode();
+                hashCode = (hashCode * 397) ^ EligibleQuantity;
                 hashCode = (hashCode * 397) ^ PromoAmount.GetHashCode();
                 return hashCode;
             }
@@ -53,8 +50,7 @@ namespace CheckoutApp.Repository
 
         public override string ToString()
         {
-            return
-                $"{nameof(ProductId)}: {ProductId}, {nameof(PromoType)}: {PromoType}, {nameof(StartDate)}: {StartDate}, {nameof(EndDate)}: {EndDate}, {nameof(PromoAmount)}: {PromoAmount}";
+            return $"{nameof(ProductId)}: {ProductId}, {nameof(PromoType)}: {PromoType}, {nameof(StartDate)}: {StartDate}, {nameof(EndDate)}: {EndDate}, {nameof(EligibleQuantity)}: {EligibleQuantity}, {nameof(PromoAmount)}: {PromoAmount}";
         }
     }
 }

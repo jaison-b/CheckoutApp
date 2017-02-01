@@ -21,7 +21,7 @@ namespace CheckoutAppTests.Models
         public void PriceForQuantity_OnEligibleQuantityAndFractionalDiscount_ShouldReturnRoundedDiscountPricing()
         {
             var decorator = new SalePercentDecorator(_testItem, 1, 33);
-            var expectedPriceInCents = 300 - 99;
+            var expectedPriceInCents = 300 - 99; //pasta 3.00 with 33% off
             Assert.AreEqual(expectedPriceInCents, decorator.PriceForQuantity(1));
         }
 

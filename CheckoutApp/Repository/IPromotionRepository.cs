@@ -10,7 +10,7 @@ namespace CheckoutApp.Repository
 {
     public interface IPromotionRepository
     {
-        IReadOnlyList<PromotionInfo> GetPromotions(string productId);
+        IReadOnlyList<PromotionInfo> GetPromotions(string productId, DateTime requestDate);
     }
 
     public class PromotionRepository : IPromotionRepository
@@ -19,25 +19,16 @@ namespace CheckoutApp.Repository
 
         public PromotionRepository(Stream promotionsInputStream)
         {
-            _promotions = ParsePromotionsInputStream(promotionsInputStream);
+            _promotions = AppUtils.ParseCsv<PromotionInfo>(promotionsInputStream, typeof(PromotionInfoMapper));
         }
 
-        public IReadOnlyList<PromotionInfo> GetPromotions(string productId)
+        public IReadOnlyList<PromotionInfo> GetPromotions(string productId, DateTime requestDate)
         {
             return _promotions.Where(
-                    promoInfo => string.Equals(promoInfo.ProductId, productId, StringComparison.OrdinalIgnoreCase))
+                    promoInfo => string.Equals(promoInfo.ProductId, productId, StringComparison.OrdinalIgnoreCase)
+                                 && requestDate >= promoInfo.StartDate && requestDate <= promoInfo.EndDate)
                 .ToList()
                 .AsReadOnly();
-        }
-
-        private static IList<PromotionInfo> ParsePromotionsInputStream(Stream promotionsInputStream)
-        {
-            var csv = new CsvReader(new StreamReader(promotionsInputStream));
-            csv.Configuration.TrimFields = true;
-            csv.Configuration.TrimHeaders = true;
-            csv.Configuration.RegisterClassMap<PromotionInfoMapper>();
-            csv.Configuration.WillThrowOnMissingField = false;
-            return csv.GetRecords<PromotionInfo>().ToList();
         }
     }
 
@@ -61,7 +52,8 @@ namespace CheckoutApp.Repository
                 .Name("END_DATE")
                 .TypeConverterOption(DateTimeStyles.RoundtripKind)
                 .Default(DateTime.MaxValue);
-            Map(m => m.EligibleQuantity).Name("ELIGIBLE_QUANTITY").TypeConverterOption(NumberStyles.Integer);
+            Map(m => m.EligibleQuantity)
+                .ConvertUsing(row => Math.Floor(decimal.Parse(row.GetField("ELIGIBLE_QUANTITY"))));
             Map(m => m.PromoAmount).Name("PROMO_AMOUNT").TypeConverterOption(NumberStyles.Float);
         }
     }
