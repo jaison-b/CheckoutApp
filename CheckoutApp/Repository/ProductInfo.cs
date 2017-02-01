@@ -7,7 +7,7 @@ using CheckoutApp.Models;
 
 namespace CheckoutApp.Repository
 {
-    //Simple value object to hold Production information
+    //Simple value object to hold Product information
     public class ProductInfo
     {
         public string ProductId { get; set; }

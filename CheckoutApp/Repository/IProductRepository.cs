@@ -18,7 +18,7 @@ namespace CheckoutApp.Repository
         /// </summary>
         /// <param name="productId"></param>
         /// <returns>
-        ///  Valid ProductInfo or Null if not values found
+        ///  Valid ProductInfo or Null if no value found
         /// </returns>
         ProductInfo GetProduct(string productId);
     }
