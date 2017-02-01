@@ -47,12 +47,11 @@ namespace CheckoutAppTests.Repository
             var expected = new PromotionInfo
             {
                 ProductId = "111",
-                PromoType = PromoType.ReducePrice,
+                PromoType = PromoType.SalePrice,
                 StartDate = DateTime.Parse("2017-01-30", null, DateTimeStyles.RoundtripKind),
                 EndDate = DateTime.Parse("2017-02-15", null, DateTimeStyles.RoundtripKind),
                 EligibleQuantity = 1,
-                PromoAmount = 0.5,
-                PromoUnit = PromoUnit.Price
+                PromoAmount = 0.5
             };
             var results = _promotionRepository.GetPromotions("111");
             Assert.IsTrue(results.Count == 1);

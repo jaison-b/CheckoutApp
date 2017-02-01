@@ -2,16 +2,16 @@
 
 namespace CheckoutApp.Models
 {
-    public class ReducePricingDecorator : PromotionDecorator
+    public class SalePriceDecorator : PromotionDecorator
     {
         private readonly int _thresholdQuantity;
-        private readonly int _reducedUnitPriceInCents;
+        private readonly int _salePriceInCents;
 
-        public ReducePricingDecorator(IOrderItem orderItem, int thresholdQuantity, int reducedUnitPriceInCents)
+        public SalePriceDecorator(IOrderItem orderItem, int thresholdQuantity, int salePriceInCents)
             : base(orderItem)
         {
             _thresholdQuantity = thresholdQuantity;
-            _reducedUnitPriceInCents = reducedUnitPriceInCents;
+            _salePriceInCents = salePriceInCents;
         }
 
         public override int PriceForQuantity(int quantity)
@@ -20,7 +20,7 @@ namespace CheckoutApp.Models
             {
                 return base.PriceForQuantity(quantity);
             }
-            return _reducedUnitPriceInCents * quantity;
+            return _salePriceInCents * quantity;
         }
     }
 }

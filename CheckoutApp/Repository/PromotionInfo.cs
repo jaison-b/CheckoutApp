@@ -5,17 +5,11 @@ namespace CheckoutApp.Repository
     //Represents type of Promotion
     public enum PromoType
     {
-        ReducePrice,
+        SalePrice,
+        SalePercent,
         BundleDiscount,
-        AddOnPromo
-    }
-
-    //Units to consider for Promotion/Discount - For e.g discount by price or percent,
-    // in the future we can have loyalty points that might affect the promo calculations differently
-    public enum PromoUnit
-    {
-        Price,
-        Percent
+        AddOnPercent,
+        AddOnUnit,
     }
 
     //Simple Value Object to hold Promotion Info
@@ -27,7 +21,6 @@ namespace CheckoutApp.Repository
         public DateTime EndDate { get; set; }
         public int EligibleQuantity { get; set; }
         public double PromoAmount { get; set; }
-        public PromoUnit PromoUnit { get; set; }
 
         protected bool Equals(PromotionInfo other)
         {
@@ -35,8 +28,7 @@ namespace CheckoutApp.Repository
                    PromoType == other.PromoType &&
                    StartDate.Equals(other.StartDate) &&
                    EndDate.Equals(other.EndDate) &&
-                   PromoAmount.Equals(other.PromoAmount) &&
-                   PromoUnit == other.PromoUnit;
+                   PromoAmount.Equals(other.PromoAmount);
         }
 
         public override bool Equals(object obj)
@@ -55,7 +47,6 @@ namespace CheckoutApp.Repository
                 hashCode = (hashCode * 397) ^ StartDate.GetHashCode();
                 hashCode = (hashCode * 397) ^ EndDate.GetHashCode();
                 hashCode = (hashCode * 397) ^ PromoAmount.GetHashCode();
-                hashCode = (hashCode * 397) ^ (int) PromoUnit;
                 return hashCode;
             }
         }
@@ -63,7 +54,7 @@ namespace CheckoutApp.Repository
         public override string ToString()
         {
             return
-                $"{nameof(ProductId)}: {ProductId}, {nameof(PromoType)}: {PromoType}, {nameof(StartDate)}: {StartDate}, {nameof(EndDate)}: {EndDate}, {nameof(PromoAmount)}: {PromoAmount}, {nameof(PromoUnit)}: {PromoUnit}";
+                $"{nameof(ProductId)}: {ProductId}, {nameof(PromoType)}: {PromoType}, {nameof(StartDate)}: {StartDate}, {nameof(EndDate)}: {EndDate}, {nameof(PromoAmount)}: {PromoAmount}";
         }
     }
 }

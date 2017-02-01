@@ -58,7 +58,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Models\BundleDiscountDecoratorTests.cs" />
-    <Compile Include="Models\ReducePricingDecoratorTests.cs" />
+    <Compile Include="Models\SalePercentDecoratorTests.cs" />
+    <Compile Include="Models\SalePriceDecoratorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\PromotionRepositoryTests.cs" />
     <Compile Include="Repository\ProductRepositoryTests.cs" />

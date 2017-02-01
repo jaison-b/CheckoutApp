@@ -46,11 +46,13 @@ namespace CheckoutApp.Repository
         public PromotionInfoMapper()
         {
             Map(m => m.ProductId).Name("PRODUCT_ID");
-            Map(m => m.PromoType)
-                .ConvertUsing(
-                    row =>
-                        ParseEnum<PromoType>(row.GetField<string>("PROMO_TYPE"),
-                            "Missing PromoType field on row: " + row.Row));
+            Map(m => m.PromoType).ConvertUsing(row =>
+            {
+                var value = row.GetField<string>("PROMO_TYPE");
+                if (string.IsNullOrEmpty(value))
+                    throw new CsvMissingFieldException("Missing PromoType field on row: " + row.Row);
+                return (PromoType) Enum.Parse(typeof(PromoType), value, true);
+            });
             Map(m => m.StartDate)
                 .Name("START_DATE")
                 .TypeConverterOption(DateTimeStyles.RoundtripKind)
@@ -61,18 +63,6 @@ namespace CheckoutApp.Repository
                 .Default(DateTime.MaxValue);
             Map(m => m.EligibleQuantity).Name("ELIGIBLE_QUANTITY").TypeConverterOption(NumberStyles.Integer);
             Map(m => m.PromoAmount).Name("PROMO_AMOUNT").TypeConverterOption(NumberStyles.Float);
-            Map(m => m.PromoUnit)
-                .ConvertUsing(
-                    row =>
-                        ParseEnum<PromoUnit>(row.GetField<string>("PROMO_UNIT"),
-                            "Missing PromoUnit field on row: " + row.Row));
-        }
-
-        private static T ParseEnum<T>(string value, string messageOnValueMissing)
-        {
-            if (string.IsNullOrEmpty(value))
-                throw new CsvMissingFieldException(messageOnValueMissing);
-            return (T) Enum.Parse(typeof(T), value, true);
         }
     }
 }
