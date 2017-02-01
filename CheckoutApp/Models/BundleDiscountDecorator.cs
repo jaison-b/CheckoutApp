@@ -7,7 +7,7 @@ namespace CheckoutApp.Models
         private readonly int _bundleSize;
         private readonly int _discountedPriceInCents;
 
-        protected BundleDiscountDecorator(IOrderItem orderItem, int bundleSize, int discountedPriceInCents)
+        public BundleDiscountDecorator(IOrderItem orderItem, int bundleSize, int discountedPriceInCents)
             : base(orderItem)
         {
             if (bundleSize < 2)
