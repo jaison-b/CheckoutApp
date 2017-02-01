@@ -3,11 +3,11 @@ using Fclp;
 
 namespace CheckoutApp
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            var parser = getParser();
+            var parser = GetParser();
             var parseResult = parser.Parse(args);
             if (parseResult.HasErrors)
             {
@@ -18,9 +18,9 @@ namespace CheckoutApp
             Console.WriteLine("Executing: {0}", parser.Object.InputFile);
         }
 
-        private static FluentCommandLineParser<ApplicationArguments> getParser()
+        private static FluentCommandLineParser<ApplicationArguments> GetParser()
         {
-            FluentCommandLineParser<ApplicationArguments> parser = new FluentCommandLineParser<ApplicationArguments>();
+            var parser = new FluentCommandLineParser<ApplicationArguments>();
             parser.Setup(arg => arg.InputFile)
                 .As('i', "input-file")
                 .Required()

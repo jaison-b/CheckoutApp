@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CheckoutApp.Models;
+﻿using CheckoutApp.Models;
 
 namespace CheckoutApp.Repository
 {
@@ -21,23 +16,24 @@ namespace CheckoutApp.Repository
 
         protected bool Equals(ProductInfo other)
         {
-            return string.Equals(ProductId, other.ProductId) && string.Equals(ProductName, other.ProductName) && UnitPriceInCents == other.UnitPriceInCents;
+            return string.Equals(ProductId, other.ProductId) &&
+                   string.Equals(ProductName, other.ProductName) &&
+                   UnitPriceInCents == other.UnitPriceInCents;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((ProductInfo) obj);
+            return obj.GetType() == GetType() && Equals((ProductInfo) obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = (ProductId != null ? ProductId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (ProductName != null ? ProductName.GetHashCode() : 0);
+                var hashCode = ProductId?.GetHashCode() ?? 0;
+                hashCode = (hashCode * 397) ^ (ProductName?.GetHashCode() ?? 0);
                 hashCode = (hashCode * 397) ^ UnitPriceInCents;
                 return hashCode;
             }
@@ -45,7 +41,8 @@ namespace CheckoutApp.Repository
 
         public override string ToString()
         {
-            return $"{nameof(ProductId)}: {ProductId}, {nameof(ProductName)}: {ProductName}, {nameof(UnitPriceInCents)}: {UnitPriceInCents}";
+            return
+                $"{nameof(ProductId)}: {ProductId}, {nameof(ProductName)}: {ProductName}, {nameof(UnitPriceInCents)}: {UnitPriceInCents}";
         }
     }
 }

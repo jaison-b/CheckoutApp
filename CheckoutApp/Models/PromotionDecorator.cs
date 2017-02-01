@@ -1,6 +1,6 @@
 ﻿namespace CheckoutApp.Models
 {
-    public abstract class PromotionDecorator : IOrderItem
+    public class PromotionDecorator : IOrderItem
     {
         private readonly IOrderItem _orderItem;
 
@@ -19,7 +19,14 @@
             return _orderItem.Description();
         }
 
-        public abstract int UnitPrice();
-        public abstract int PriceForQuantity(int quantity);
+        public int UnitPrice()
+        {
+            return _orderItem.UnitPrice();
+        }
+
+        public virtual int PriceForQuantity(int quantity)
+        {
+            return _orderItem.PriceForQuantity(quantity);
+        }
     }
 }

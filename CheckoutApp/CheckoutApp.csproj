@@ -51,9 +51,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\BundleDiscountDecorator.cs" />
     <Compile Include="Models\IOrderItem.cs" />
     <Compile Include="Models\ProductItem.cs" />
     <Compile Include="Models\PromotionDecorator.cs" />
+    <Compile Include="Models\ReducePricingDecorator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IProductRepository.cs" />

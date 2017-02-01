@@ -35,28 +35,30 @@
 
         public override string ToString()
         {
-            return $"{nameof(_productId)}: {_productId}, {nameof(_productName)}: {_productName}, {nameof(_unitPriceInCents)}: {_unitPriceInCents}";
+            return
+                $"{nameof(_productId)}: {_productId}, {nameof(_productName)}: {_productName}, {nameof(_unitPriceInCents)}: {_unitPriceInCents}";
         }
 
         protected bool Equals(ProductItem other)
         {
-            return string.Equals(_productId, other._productId) && string.Equals(_productName, other._productName) && _unitPriceInCents == other._unitPriceInCents;
+            return string.Equals(_productId, other._productId) &&
+                   string.Equals(_productName, other._productName) &&
+                   _unitPriceInCents == other._unitPriceInCents;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((ProductItem) obj);
+            return obj.GetType() == GetType() && Equals((ProductItem) obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = (_productId != null ? _productId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (_productName != null ? _productName.GetHashCode() : 0);
+                var hashCode = _productId?.GetHashCode() ?? 0;
+                hashCode = (hashCode * 397) ^ (_productName?.GetHashCode() ?? 0);
                 hashCode = (hashCode * 397) ^ _unitPriceInCents;
                 return hashCode;
             }

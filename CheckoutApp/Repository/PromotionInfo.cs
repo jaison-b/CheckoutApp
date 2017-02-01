@@ -10,8 +10,8 @@ namespace CheckoutApp.Repository
         AddOnPromo
     }
 
-    //Units to consider for Promotion/Discount - For e.g discount by price or percent, in the future we can have loyalty points
-    //that might affect the promo calculations differently
+    //Units to consider for Promotion/Discount - For e.g discount by price or percent,
+    // in the future we can have loyalty points that might affect the promo calculations differently
     public enum PromoUnit
     {
         Price,
@@ -31,17 +31,19 @@ namespace CheckoutApp.Repository
 
         protected bool Equals(PromotionInfo other)
         {
-            return string.Equals(ProductId, other.ProductId) && PromoType == other.PromoType &&
-                   StartDate.Equals(other.StartDate) && EndDate.Equals(other.EndDate) &&
-                   PromoAmount.Equals(other.PromoAmount) && PromoUnit == other.PromoUnit;
+            return string.Equals(ProductId, other.ProductId) &&
+                   PromoType == other.PromoType &&
+                   StartDate.Equals(other.StartDate) &&
+                   EndDate.Equals(other.EndDate) &&
+                   PromoAmount.Equals(other.PromoAmount) &&
+                   PromoUnit == other.PromoUnit;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((PromotionInfo) obj);
+            return obj.GetType() == GetType() && Equals((PromotionInfo) obj);
         }
 
         public override int GetHashCode()
