@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\AddOnPercentPromoDecorator.cs" />
+    <Compile Include="Models\AddOnUnitPromoDecorator.cs" />
     <Compile Include="Models\BundleDiscountDecorator.cs" />
     <Compile Include="Models\IOrderItem.cs" />
     <Compile Include="Models\ProductItem.cs" />

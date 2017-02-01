@@ -23,8 +23,9 @@ namespace CheckoutApp.Models
             {
                 return base.PriceForQuantity(quantity);
             }
-            var salePrice = UnitPrice() - (UnitPrice() / _salePercent); //sale price in cents
-            return salePrice * quantity;
+            var discountPrice = decimal.Multiply(UnitPrice(), decimal.Divide(_salePercent, 100));
+            var salePrice = decimal.Subtract(UnitPrice(), discountPrice);
+            return decimal.ToInt32(decimal.Multiply(salePrice, quantity));
         }
     }
 }

@@ -18,6 +18,14 @@ namespace CheckoutAppTests.Models
         }
 
         [TestMethod]
+        public void PriceForQuantity_OnEligibleQuantityAndFractionalDiscount_ShouldReturnRoundedDiscountPricing()
+        {
+            var decorator = new SalePercentDecorator(_testItem, 1, 33);
+            var expectedPriceInCents = 300 - 99;
+            Assert.AreEqual(expectedPriceInCents, decorator.PriceForQuantity(1));
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Invalid Sale Percent was allowed")]
         public void PriceForQuantity_OnInvalidSalePercent_ShouldThrowExcpeption()
         {
