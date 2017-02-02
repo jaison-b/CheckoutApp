@@ -46,7 +46,7 @@ PRODUCT_ID, PROMO_TYPE, START_DATE, END_DATE, ELIGIBLE_QUANTITY, PROMO_AMOUNT
 555, AddOnUnit, 2017-01-30, 2017-02-15, 3, 1
 ```
 List of Promo Types supported currently:  
-  1. *SalePrice* - discounted price on sale item for e.g. "Apple sale price -$0.75- $0.50"
+  1. *SalePrice* - discounted price on sale item for e.g. "Apple sale price ~~$0.75~~ $0.50"
   2. *SalePercent* - discounted percent on sale item for e.g. "10% off on Bananas"
   3. *BundleDiscount* - bundle discounts for e.g. "Buy 3 Oranges for $2.00"
   4. *AddOnPercent* - additional promotion for e.g. "Buy One Get 50% off" promo
