@@ -22,11 +22,48 @@ option is missing.
   --help                 Display help screen.
 ```
 
-### Testing Sample Data
-In the bin folder where the executable was generated you should find SampleData folder run the executable as follows:
+### Testing Executable
+Relative to where the executable is built there is a SampleData folder that can used for testing:
 ```bash
 CheckoutApp -i SampleData\orders.txt -p SampleData\products.txt -d SampleData\promotions.txt
 ```
 #### Result:
 ![alt text](CheckoutAppResult.png "Checkout App result")
 
+### Development Notes
+
+#### Input file format
+__CSV in the only supported format__  
+_header row is required for csv files to be processed_
+##### Products file format [sample]
+```
+PRODUCT_ID, PRODUCT_NAME, UNIT_PRICE
+111, APPLE, 0.75
+222, BANANA, 1.00
+333, ORANGE, 0.85
+444, BOWTIE PASTA, 2.97
+555, CHEDDAR CHEESE, 3.99
+```
+##### Promotions file format [sample]
+```
+PRODUCT_ID, PROMO_TYPE, START_DATE, END_DATE, ELIGIBLE_QUANTITY, PROMO_AMOUNT
+111, SalePrice, 2017-01-30, 2017-02-15, 1, 0.50
+222, SalePercent, 2017-01-30, 2017-02-15, 1, 10
+333, BundleDiscount, 2017-01-30, 2017-02-15, 3, 2.00
+444, AddOnPercent, 2017-01-30, 2017-02-15, 1, 50
+555, AddOnUnit, 2017-01-30, 2017-02-15, 3, 1
+```
+##### Input Orders file format [sample]
+```
+PRODUCT_ID, UNITS
+111, 7
+222, 3
+111, -2
+333, 6
+444, 4
+555, 4
+```
+__Notes:__  
+  1. Fractional *'UNITS'* is not allowed in the orders input file. It will be rounded up(Math.Ceiling)
+  2. Fractional *'ELIGIBLE_QUANTITY'* is not allowed in the promotions input file. It will be rounded down(Math.Floor)
+  3. Currently, promotions will be applied/chained in the order specified in promotions file.As a future enhancement we can introduce something like *'PRIORITY'* that will allow us to sort the promotion order.
