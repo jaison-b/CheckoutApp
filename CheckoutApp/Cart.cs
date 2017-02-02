@@ -21,7 +21,7 @@ namespace CheckoutApp
         public void Checkout()
         {
             Console.SetCursorPosition(0, Console.CursorTop - 1);
-            Console.WriteAscii("Grocery Co", Color.SteelBlue);
+            Console.WriteAscii("Grocery Co");
             PrintLine();
             Console.WriteLine("| {0,-25} | {1,10} |", "Item", "Cost", Color.Magenta);
             PrintLine();
@@ -34,7 +34,7 @@ namespace CheckoutApp
             PrintLine();
             PrintCheckoutItem("Total Cost", totalCost, Color.GreenYellow);
             PrintLine();
-            Console.WriteLine("**** Thank you for shopping with us ****", Color.SteelBlue);
+            Console.WriteLine("**** Thank you for shopping with us ****");
         }
 
         private static void PrintLine()
