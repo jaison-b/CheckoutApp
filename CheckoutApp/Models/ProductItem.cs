@@ -28,7 +28,7 @@
             return _unitPriceInCents;
         }
 
-        public int GetPrice(int quantity)
+        public int GetEffectivePrice(int quantity)
         {
             return _unitPriceInCents * quantity;
         }

@@ -15,10 +15,10 @@
             _salePriceInCents = salePriceInCents;
         }
 
-        public override int GetPrice(int quantity)
+        public override int GetEffectivePrice(int quantity)
         {
             if (quantity < _thresholdQuantity)
-                return base.GetPrice(quantity);
+                return base.GetEffectivePrice(quantity);
             return _salePriceInCents * quantity;
         }
 

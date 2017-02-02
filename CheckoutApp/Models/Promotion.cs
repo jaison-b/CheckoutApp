@@ -32,9 +32,9 @@
             return _orderItem.UnitPrice();
         }
 
-        public virtual int GetPrice(int quantity)
+        public virtual int GetEffectivePrice(int quantity)
         {
-            return _orderItem.GetPrice(quantity);
+            return _orderItem.GetEffectivePrice(quantity);
         }
 
         protected IOrderItem GetOrderItem()

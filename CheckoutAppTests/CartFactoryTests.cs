@@ -68,7 +68,7 @@ namespace CheckoutAppTests
             Cart cart = _cartFactory.CreateCart(GetTestOrdersStream(), TEST_ORDER_DATE);
             var expectedPriceInCents = 2 * 50; //2 organges 50 cents each
             var actualItem = cart.GetOrderItems().Single(item => item.Key.ItemId().Equals("222"));
-            Assert.AreEqual(expectedPriceInCents, actualItem.Key.GetPrice(actualItem.Value));
+            Assert.AreEqual(expectedPriceInCents, actualItem.Key.GetEffectivePrice(actualItem.Value));
         }
 
         [TestMethod]
@@ -90,7 +90,7 @@ namespace CheckoutAppTests
             var expectedPriceInCents = 175; // 7 apples at sale price(0.50) and buy one get one offer on top of that
             Cart cart = _cartFactory.CreateCart(GetTestOrdersStream(), TEST_ORDER_DATE);
             var actualItem = cart.GetOrderItems().Single(item => item.Key.ItemId().Equals("111"));
-            Assert.AreEqual(expectedPriceInCents, actualItem.Key.GetPrice(actualItem.Value));
+            Assert.AreEqual(expectedPriceInCents, actualItem.Key.GetEffectivePrice(actualItem.Value));
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@ namespace CheckoutAppTests
             var cart = _cartFactory.CreateCart(GetTestOrdersStream(), TEST_ORDER_DATE);
             var expectedPriceInCents = 7 * 75; // 7 apples at actual price(0.75)
             var actualItem = cart.GetOrderItems().Single(item => item.Key.ItemId().Equals("111"));
-            Assert.AreEqual(expectedPriceInCents, actualItem.Key.GetPrice(actualItem.Value));
+            Assert.AreEqual(expectedPriceInCents, actualItem.Key.GetEffectivePrice(actualItem.Value));
         }
 
         private static Stream GetTestOrdersStream()

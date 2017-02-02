@@ -21,14 +21,14 @@ namespace CheckoutApp.Models
             _salePercent = salePercent;
         }
 
-        public override int GetPrice(int quantity)
+        public override int GetEffectivePrice(int quantity)
         {
             if (quantity < _eligibleUnits)
-                return base.GetPrice(quantity);
+                return base.GetEffectivePrice(quantity);
             //Calculation: Free_Percent/Total_Units = Discount Percent
             //For e.g Buy one get 50% off - so 50/2 Units = 25% discount overall
             var discountPercent = decimal.Divide(decimal.Divide(_salePercent, _eligibleUnits + 1), 100);
-            var basePrice = base.GetPrice(quantity);
+            var basePrice = base.GetEffectivePrice(quantity);
             var discountAmount = decimal.ToInt32(decimal.Multiply(basePrice, discountPercent));
             return basePrice - discountAmount;
         }

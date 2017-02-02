@@ -14,7 +14,7 @@ namespace CheckoutAppTests.Models
         {
             var decorator = new AddOnPercentPromo(_productItem, 1, 50);
             var expectedPriceInCents = 3000 + 1500; // 1 fulprice + 1 halfprice
-            Assert.AreEqual(expectedPriceInCents, decorator.GetPrice(2));
+            Assert.AreEqual(expectedPriceInCents, decorator.GetEffectivePrice(2));
         }
 
         [TestMethod]
@@ -22,7 +22,7 @@ namespace CheckoutAppTests.Models
         {
             var decorator = new AddOnPercentPromo(_productItem, 1, 50); //buy one get 50% off
             var expectedPriceInCents = 9000; // 25% is elgible discount applied on total
-            Assert.AreEqual(expectedPriceInCents, decorator.GetPrice(4));
+            Assert.AreEqual(expectedPriceInCents, decorator.GetEffectivePrice(4));
         }
 
         [TestMethod]

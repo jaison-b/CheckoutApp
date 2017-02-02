@@ -11,6 +11,6 @@
         /// </summary>
         /// <param name="quantity"></param>
         /// <returns>Effective price in cents</returns>
-        int GetPrice(int quantity);
+        int GetEffectivePrice(int quantity);
     }
 }

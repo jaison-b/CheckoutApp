@@ -18,10 +18,10 @@ namespace CheckoutApp.Models
             _salePercent = salePercent;
         }
 
-        public override int GetPrice(int quantity)
+        public override int GetEffectivePrice(int quantity)
         {
             if (quantity < _thresholdQuantity)
-                return base.GetPrice(quantity);
+                return base.GetEffectivePrice(quantity);
             var discountPrice = decimal.Multiply(UnitPrice(), decimal.Divide(_salePercent, 100));
             var salePrice = decimal.Subtract(UnitPrice(), discountPrice);
             return decimal.ToInt32(decimal.Multiply(salePrice, quantity));

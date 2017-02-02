@@ -13,7 +13,7 @@ namespace CheckoutAppTests.Models
         {
             var decorator = new SalePrice(_testItem, 3, 50);
             var expectedPricingInCents = 75 * 2; //2 apples in actual price
-            Assert.AreEqual(expectedPricingInCents, decorator.GetPrice(2));
+            Assert.AreEqual(expectedPricingInCents, decorator.GetEffectivePrice(2));
         }
 
         [TestMethod()]
@@ -21,7 +21,7 @@ namespace CheckoutAppTests.Models
         {
             var decorator = new SalePrice(_testItem, 1, 50);
             var expectedPricingInCents = 50 * 2; //2 apples in discount price
-            Assert.AreEqual(expectedPricingInCents, decorator.GetPrice(2));
+            Assert.AreEqual(expectedPricingInCents, decorator.GetEffectivePrice(2));
         }
 
         [TestMethod]
@@ -29,7 +29,7 @@ namespace CheckoutAppTests.Models
         {
             var decorator = new SalePrice(_testItem, 1, 50);
             var expectedPricingInCents = 50 * 1; //1 apple in discount price
-            Assert.AreEqual(expectedPricingInCents, decorator.GetPrice(1));
+            Assert.AreEqual(expectedPricingInCents, decorator.GetEffectivePrice(1));
         }
     }
 }

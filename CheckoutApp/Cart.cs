@@ -29,7 +29,7 @@ namespace CheckoutApp
             var totalActualCost = decimal.Zero;
             foreach (var orderItem in _orderItems)
             {
-                var effectiveCost = decimal.Divide(orderItem.Key.GetPrice(orderItem.Value), 100);
+                var effectiveCost = decimal.Divide(orderItem.Key.GetEffectivePrice(orderItem.Value), 100);
                 var actualCost = decimal.Divide(orderItem.Key.UnitPrice() * orderItem.Value, 100);
                 totalActualCost += actualCost;
                 Console.WriteLine("| {0,-25} | {1,15:C} | {2,15:C} |", orderItem.Key.Description(),
@@ -68,7 +68,7 @@ namespace CheckoutApp
         /// <returns>Effective total price in cents</returns>
         public int GetTotalEffectivePrice()
         {
-            return _orderItems.Sum(entry => entry.Key.GetPrice(entry.Value));
+            return _orderItems.Sum(entry => entry.Key.GetEffectivePrice(entry.Value));
         }
     }
 }

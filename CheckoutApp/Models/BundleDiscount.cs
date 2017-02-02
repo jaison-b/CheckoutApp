@@ -20,10 +20,10 @@ namespace CheckoutApp.Models
             _discountedPriceInCents = discountedPriceInCents;
         }
 
-        public override int GetPrice(int quantity)
+        public override int GetEffectivePrice(int quantity)
         {
             var bundles = quantity / _bundleSize;
-            if (bundles < 1) return base.GetPrice(quantity);
+            if (bundles < 1) return base.GetEffectivePrice(quantity);
             var remainder = quantity % _bundleSize;
             return bundles * _discountedPriceInCents + remainder * UnitPrice();
         }
