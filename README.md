@@ -25,7 +25,7 @@ CheckoutApp -i SampleData\orders.txt -p SampleData\products.txt -d SampleData\pr
 ![alt text](CheckoutAppResult.png "Checkout App result")
 
 ## Input file format
-__CSV in the only supported format__  
+__CSV is the only supported format__  
 ___Note: header row is required for csv files to be processed___
 ### Products file format [sample]
 ```
