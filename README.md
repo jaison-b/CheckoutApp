@@ -27,5 +27,6 @@ In the bin folder where the executable was generated you should find SampleData 
 ```bash
 CheckoutApp -i SampleData\orders.txt -p SampleData\products.txt -d SampleData\promotions.txt
 ```
-it should provide result that looks like this:
+#### Result:
+![alt text](CheckoutAppResult.png "Checkout App result")
 
