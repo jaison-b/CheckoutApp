@@ -67,3 +67,9 @@ __Notes:__
   1. Fractional *'UNITS'* is not allowed in the orders input file. It will be rounded up(Math.Ceiling)
   2. Fractional *'ELIGIBLE_QUANTITY'* is not allowed in the promotions input file. It will be rounded down(Math.Floor)
   3. Currently, promotions will be applied/chained in the order specified in promotions file.As a future enhancement we can introduce something like *'PRIORITY'* that will allow us to sort the promotion order.
+  4. If a new promotion is being introduced, it needs to be supported by a valid [PromoType](https://github.com/jaison-b/CheckoutApp/blob/master/CheckoutApp/Repository/PromoType.cs) and [Promotion](https://github.com/jaison-b/CheckoutApp/blob/master/CheckoutApp/Models/Promotion.cs) implementation that supports the price calculation.
+
+__Design Choices:__  
+  1. All amounts/prices are converted down to cents(lowest unit). This avoids precision issues when handling currency and all calculations are done using the value. Amounts will be formatted back to dollars only on display.
+  2. A [decorator](https://en.wikipedia.org/wiki/Decorator_pattern) pattern was used for promotions calculaton. It allows lot of flexibility to add more promotions in the future.
+  3. [CartFactory](https://github.com/jaison-b/CheckoutApp/blob/master/CheckoutApp/CartFactory.cs) is reponsible for processing the input orders file and returning promotions wrapped around [IOrderItem](https://github.com/jaison-b/CheckoutApp/blob/master/CheckoutApp/Models/IOrderItem.cs) to calculate pricing.
