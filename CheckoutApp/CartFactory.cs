@@ -13,10 +13,15 @@ namespace CheckoutApp
         private readonly IProductRepository _productRepository;
         private readonly IPromotionRepository _promotionRepository;
 
+        // simple dictionary that acts like a service factory to wrap the orderitem in respective
+        // PromotionDecorator for the PromoType
+        private IDictionary<PromoType, Func<IOrderItem, PromotionInfo, Promotion>> _promotionDecoratorLookup;
+
         public CartFactory(IPromotionRepository promotionRepository, IProductRepository productRepository)
         {
             _promotionRepository = promotionRepository;
             _productRepository = productRepository;
+            InitPromotionDecoratorLookup();
         }
 
         public Cart CreateCart(Stream ordersInputFile, DateTime orderDate)
@@ -40,32 +45,16 @@ namespace CheckoutApp
         private IOrderItem DecoratePromotions(IOrderItem orderItem, IReadOnlyList<PromotionInfo> promotions)
         {
             if (promotions == null || promotions.Count == 0)
-            {
                 return orderItem;
-            }
-            return promotions.Aggregate(orderItem, (current, promotion) => ToPromotionDecorator(current, promotion));
+            return promotions.Aggregate(orderItem, ToPromotionDecorator);
         }
 
         private Promotion ToPromotionDecorator(IOrderItem orderItem, PromotionInfo promotionInfo)
         {
-            switch (promotionInfo.PromoType)
+            Func<IOrderItem, PromotionInfo, Promotion> decoratorGenerator;
+            if (_promotionDecoratorLookup.TryGetValue(promotionInfo.PromoType, out decoratorGenerator))
             {
-                case PromoType.SalePrice:
-                    return new SalePrice(orderItem, promotionInfo.EligibleQuantity,
-                        DollarsToCents(promotionInfo.PromoAmount));
-                case PromoType.SalePercent:
-                    return new SalePercent(orderItem, promotionInfo.EligibleQuantity,
-                        Convert.ToInt32(promotionInfo.PromoAmount));
-                case PromoType.BundleDiscount:
-                    return new BundleDiscount(orderItem, promotionInfo.EligibleQuantity,
-                        DollarsToCents(promotionInfo.PromoAmount));
-                case PromoType.AddOnUnit:
-                    var freeUnits = Math.Floor(promotionInfo.PromoAmount); //fractional free units not allowed
-                    return new AddOnUnitPromo(orderItem, promotionInfo.EligibleQuantity,
-                        Convert.ToInt32(freeUnits));
-                case PromoType.AddOnPercent:
-                    return new AddOnPercentPromo(orderItem, promotionInfo.EligibleQuantity,
-                        Convert.ToInt32(promotionInfo.PromoAmount));
+                return decoratorGenerator(orderItem, promotionInfo);
             }
             throw new ArgumentException("Unsupported PromoType: " + promotionInfo.PromoType);
         }
@@ -75,19 +64,49 @@ namespace CheckoutApp
             return Convert.ToInt32(dollarAmount * 100);
         }
 
-        internal sealed class InputOrder
+        private void InitPromotionDecoratorLookup()
         {
-            public string ProductId { get; set; }
-            public int Quantity { get; set; }
-        }
-
-        internal sealed class InputOrderMapper : CsvClassMap<InputOrder>
-        {
-            public InputOrderMapper()
+            _promotionDecoratorLookup = new Dictionary<PromoType, Func<IOrderItem, PromotionInfo, Promotion>>
             {
-                Map(m => m.ProductId).Name("PRODUCT_ID");
-                Map(m => m.Quantity).ConvertUsing(row => Math.Ceiling(decimal.Parse(row.GetField("UNITS")))).Default(0);
-            }
+                { //Sale Price
+                    PromoType.SalePrice, (orderItem, promotionInfo) =>
+                        new SalePrice(orderItem, promotionInfo.EligibleQuantity, DollarsToCents(promotionInfo.PromoAmount))
+                },
+                { //Sale Percent
+                    PromoType.SalePercent, (orderItem, promotionInfo) =>
+                        new SalePercent(orderItem, promotionInfo.EligibleQuantity, Convert.ToInt32(promotionInfo.PromoAmount))
+                },
+                { //Bundle Discount
+                    PromoType.BundleDiscount, (orderItem, promotionInfo) =>
+                        new BundleDiscount(orderItem, promotionInfo.EligibleQuantity, DollarsToCents(promotionInfo.PromoAmount))
+                },
+                { //AddOn Unit
+                    PromoType.AddOnUnit, (orderItem, promotionInfo) =>
+                    {
+                        var freeUnits = Math.Floor(promotionInfo.PromoAmount); //fractional free units not allowed
+                        return new AddOnUnitPromo(orderItem, promotionInfo.EligibleQuantity, Convert.ToInt32(freeUnits));
+                    }
+                },
+                { //AddOn Percent
+                    PromoType.AddOnPercent, (orderItem, promotionInfo) =>
+                        new AddOnPercentPromo(orderItem, promotionInfo.EligibleQuantity, Convert.ToInt32(promotionInfo.PromoAmount))
+                }
+            };
+        }
+    }
+
+    internal sealed class InputOrder
+    {
+        public string ProductId { get; set; }
+        public int Quantity { get; set; }
+    }
+
+    internal sealed class InputOrderMapper : CsvClassMap<InputOrder>
+    {
+        public InputOrderMapper()
+        {
+            Map(m => m.ProductId).Name("PRODUCT_ID");
+            Map(m => m.Quantity).ConvertUsing(row => Math.Ceiling(decimal.Parse(row.GetField("UNITS")))).Default(0);
         }
     }
 }

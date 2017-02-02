@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using CheckoutApp.Repository;
 using CommandLine;
 using CommandLine.Text;
@@ -50,11 +51,15 @@ namespace CheckoutApp
                     AddDashesToOption = true
                 };
                 help.AddOptions(this);
-                if (LastParserState.Errors.Count <= 0) return help;
-                var errors = help.RenderParsingErrorsText(this, 2);
-                if (string.IsNullOrEmpty(errors)) return help;
-                help.AddPreOptionsLine(string.Concat(Environment.NewLine, "ERROR(S):"));
-                help.AddPreOptionsLine(errors);
+                if (LastParserState?.Errors.Any() == true)
+                {
+                    var errors = help.RenderParsingErrorsText(this, 2);
+                    if (!string.IsNullOrEmpty(errors))
+                    {
+                        help.AddPreOptionsLine(string.Concat(Environment.NewLine, "ERROR(S):"));
+                        help.AddPreOptionsLine(errors);
+                    }
+                }
                 return help;
             }
         }

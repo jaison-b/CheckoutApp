@@ -3,15 +3,9 @@ Grocery Co Checkout App
 
 ## Usage
 ```bash
+> CheckoutApp --help
 CheckoutApp
 Copyright (C) 2012 Jaison.B
-
-ERROR(S):
-  -i/--input-file required option is missing.
-  -p/--product-file required
-option is missing.
-  -d/--discount-file required option is missing.
-
 
   -i, --input-file       Required. Order input file
 
@@ -19,7 +13,7 @@ option is missing.
 
   -d, --discount-file    Required. Promotion input file
 
-  --help                 Display help screen.
+  --help                 Display this help screen.
 ```
 
 ### Testing Executable
