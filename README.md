@@ -53,6 +53,13 @@ PRODUCT_ID, PROMO_TYPE, START_DATE, END_DATE, ELIGIBLE_QUANTITY, PROMO_AMOUNT
 444, AddOnPercent, 2017-01-30, 2017-02-15, 1, 50
 555, AddOnUnit, 2017-01-30, 2017-02-15, 3, 1
 ```
+List of Promo Types supported currently:  
+  1. *SalePrice* - for discounted price on sale items
+  2. *SalePercent* - for discounted percent on sale item
+  3. *BundleDiscount* - for bundle discounds for e.g Buy 3 apple for $2.00 type deals
+  4. *AddOnPercent* - for add promotions like Buy one get one type offers
+  5. *AddOnUnit* - for add on promotions like Buy one get 50% off
+
 ##### Input Orders file format [sample]
 ```
 PRODUCT_ID, UNITS
@@ -73,3 +80,9 @@ __Design Choices:__
   1. All amounts/prices are converted down to cents(lowest unit). This avoids precision issues when handling currency and all calculations are done using the value. Amounts will be formatted back to dollars only on display.
   2. A [decorator](https://en.wikipedia.org/wiki/Decorator_pattern) pattern was used for promotions calculaton. It allows lot of flexibility to add more promotions in the future.
   3. [CartFactory](https://github.com/jaison-b/CheckoutApp/blob/master/CheckoutApp/CartFactory.cs) is reponsible for processing the input orders file and returning promotions wrapped around [IOrderItem](https://github.com/jaison-b/CheckoutApp/blob/master/CheckoutApp/Models/IOrderItem.cs) to calculate pricing.
+ 
+__Dependencies:__ (sourced through NuGet)
+  1. [CommandLineParser](https://github.com/gsscoder/commandline) 
+  2. [CsvHelper](https://joshclose.github.io/CsvHelper)
+  3. [Colorful.Console](https://github.com/tomakita/Colorful.Console)
+  4. [Moq](https://github.com/Moq/moq4/wiki/Quickstart) - mock library used in tests.
