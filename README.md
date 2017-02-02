@@ -69,6 +69,7 @@ __Notes:__
   2. Fractional *'ELIGIBLE_QUANTITY'* is not allowed in the promotions input file. It will be rounded down(Math.Floor)
   3. Currently, promotions will be applied/chained in the order specified in promotions file.As a future enhancement we can introduce something like *'PRIORITY'* that will allow us to sort the promotion order.
   4. If a new promotion is being introduced, it needs to be supported by a valid [PromoType](https://github.com/jaison-b/CheckoutApp/blob/master/CheckoutApp/Repository/PromoType.cs) and [Promotion](https://github.com/jaison-b/CheckoutApp/blob/master/CheckoutApp/Models/Promotion.cs) implementation that supports the price calculation.
+  5. *'START_DATE'* and *'END_DATE'* is not mandatory and will be defaulted to DateTime.MinValue for START_DATE and DateTime.MaxValue for END_DATE incase not provided in the input file.
 
 __Design Choices:__  
   1. All amounts/prices are converted down to cents(lowest unit). This avoids precision issues when handling currency and all calculations are done using the value. Amounts will be formatted back to dollars only on display.
