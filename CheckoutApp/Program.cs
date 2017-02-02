@@ -1,5 +1,8 @@
 ﻿using System;
-using Fclp;
+using System.IO;
+using CheckoutApp.Repository;
+using CommandLine;
+using CommandLine.Text;
 
 namespace CheckoutApp
 {
@@ -7,46 +10,55 @@ namespace CheckoutApp
     {
         public static void Main(string[] args)
         {
-            var parser = GetParser();
-            var parseResult = parser.Parse(args);
-            if (parseResult.HasErrors)
+            var options = new Options();
+            if (Parser.Default.ParseArguments(args, options))
             {
-                parser.HelpOption.ShowHelp(parser.Options);
-                Environment.Exit(-1);
+                Console.WriteLine("Checking Out...");
+                CheckOut(options);
             }
-
-            Console.WriteLine("Executing: {0}", parser.Object.InputFile);
         }
 
-        private static FluentCommandLineParser<ApplicationArguments> GetParser()
+        private static void CheckOut(Options options)
         {
-            var parser = new FluentCommandLineParser<ApplicationArguments>();
-            parser.Setup(arg => arg.InputFile)
-                .As('i', "input-file")
-                .Required()
-                .WithDescription("Order file to process");
-            parser.Setup(arg => arg.ProductsFile)
-                .As('p', "products-file")
-                .Required()
-                .WithDescription("Products file to lookup");
-            parser.Setup(arg => arg.PromotionsFile)
-                .As('d', "discounts-file")
-                .Required()
-                .WithDescription("Discounts file to apply to products");
-            parser.SetupHelp("?", "help")
-                .Callback(text => Console.WriteLine(text))
-                .WithHeader("Usage: CheckoutApp -i ordersfile.txt -p prodsfile.txt -d promosfile.txt\n" +
-                            "       CheckoutApp --input-File ordersfile.txt --products-file prodsfile.txt --discounts-file promosfile.txt");
+            IProductRepository productRepository = new ProductRepository(File.OpenRead(options.ProductInputFile));
+            IPromotionRepository promotionRepository = new PromotionRepository(File.OpenRead(options.PromotionInputFile));
+            ICartFactory cartFactory = new CartFactory(promotionRepository, productRepository);
+            var cart = cartFactory.CreateCart(File.OpenRead(options.OrderInputFile), DateTime.Now);
+            cart.Checkout();
+        }
 
-            return parser;
+        internal sealed class Options
+        {
+            [Option('i', "input-file", Required = true, HelpText = "Order input file")]
+            public string OrderInputFile { get; set; }
+
+            [Option('p', "product-file", Required = true, HelpText = "Product catalog file")]
+            public string ProductInputFile { get; set; }
+
+            [Option('d', "discount-file", Required = true, HelpText = "Promotion input file")]
+            public string PromotionInputFile { get; set; }
+
+            [ParserState]
+            public IParserState LastParserState { get; set; }
+
+            [HelpOption]
+            public string GetUsage()
+            {
+                var help = new HelpText
+                {
+                    Heading = new HeadingInfo("CheckoutApp"),
+                    Copyright = new CopyrightInfo("Jaison.B", 2012),
+                    AdditionalNewLineAfterOption = true,
+                    AddDashesToOption = true
+                };
+                help.AddOptions(this);
+                if (LastParserState.Errors.Count <= 0) return help;
+                var errors = help.RenderParsingErrorsText(this, 2); // indent with two spaces
+                if (string.IsNullOrEmpty(errors)) return help;
+                help.AddPreOptionsLine(string.Concat(Environment.NewLine, "ERROR(S):"));
+                help.AddPreOptionsLine(errors);
+                return help;
+            }
         }
     }
-
-    public class ApplicationArguments
-    {
-        public string InputFile { get; set; }
-        public string ProductsFile { get; set; }
-        public string PromotionsFile { get; set; }
-    }
-
 }

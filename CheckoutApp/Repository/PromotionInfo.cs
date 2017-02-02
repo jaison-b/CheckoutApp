@@ -24,7 +24,9 @@ namespace CheckoutApp.Repository
 
         protected bool Equals(PromotionInfo other)
         {
-            return string.Equals(ProductId, other.ProductId) && PromoType == other.PromoType && StartDate.Equals(other.StartDate) && EndDate.Equals(other.EndDate) && EligibleQuantity == other.EligibleQuantity && PromoAmount.Equals(other.PromoAmount);
+            return string.Equals(ProductId, other.ProductId) && PromoType == other.PromoType &&
+                   StartDate.Equals(other.StartDate) && EndDate.Equals(other.EndDate) &&
+                   EligibleQuantity == other.EligibleQuantity && PromoAmount.Equals(other.PromoAmount);
         }
 
         public override bool Equals(object obj)
@@ -50,7 +52,8 @@ namespace CheckoutApp.Repository
 
         public override string ToString()
         {
-            return $"{nameof(ProductId)}: {ProductId}, {nameof(PromoType)}: {PromoType}, {nameof(StartDate)}: {StartDate}, {nameof(EndDate)}: {EndDate}, {nameof(EligibleQuantity)}: {EligibleQuantity}, {nameof(PromoAmount)}: {PromoAmount}";
+            return
+                $"{nameof(ProductId)}: {ProductId}, {nameof(PromoType)}: {PromoType}, {nameof(StartDate)}: {StartDate}, {nameof(EndDate)}: {EndDate}, {nameof(EligibleQuantity)}: {EligibleQuantity}, {nameof(PromoAmount)}: {PromoAmount}";
         }
     }
 }

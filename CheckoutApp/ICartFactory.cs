@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using CheckoutApp.Models;
 using CheckoutApp.Repository;
 using CsvHelper.Configuration;
-using Fclp.Internals.Extensions;
 
 namespace CheckoutApp
 {
@@ -17,8 +15,8 @@ namespace CheckoutApp
 
     public class CartFactory : ICartFactory
     {
-        private readonly IPromotionRepository _promotionRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IPromotionRepository _promotionRepository;
 
         public CartFactory(IPromotionRepository promotionRepository, IProductRepository productRepository)
         {
@@ -39,17 +37,18 @@ namespace CheckoutApp
         {
             var productInfo = _productRepository.GetProduct(productId);
             if (productInfo == null)
-            {
                 throw new ArgumentException("No products exists for Product ID: " + productId);
-            }
-            return DecoratePromotions(productInfo.ToProductItem(), _promotionRepository.GetPromotions(productId,orderDate));
+            return DecoratePromotions(productInfo.ToProductItem(),
+                _promotionRepository.GetPromotions(productId, orderDate));
         }
 
         private IOrderItem DecoratePromotions(IOrderItem orderItem, IReadOnlyList<PromotionInfo> promotions)
         {
-            return promotions.IsNullOrEmpty()
-                ? orderItem
-                : promotions.Aggregate(orderItem, (current, promotion) => ToPromotionDecorator(current, promotion));
+            if (promotions == null || promotions.Count == 0)
+            {
+                return orderItem;
+            }
+            return promotions.Aggregate(orderItem, (current, promotion) => ToPromotionDecorator(current, promotion));
         }
 
         private PromotionDecorator ToPromotionDecorator(IOrderItem orderItem, PromotionInfo promotionInfo)
@@ -72,7 +71,6 @@ namespace CheckoutApp
                 case PromoType.AddOnPercent:
                     return new AddOnPercentPromoDecorator(orderItem, promotionInfo.EligibleQuantity,
                         Convert.ToInt32(promotionInfo.PromoAmount));
-                    
             }
             throw new ArgumentException("Unsupported PromoType: " + promotionInfo.PromoType);
         }

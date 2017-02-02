@@ -19,7 +19,7 @@ namespace CheckoutAppTests
 
         private ICartFactory _cartFactory;
 
-        private DateTime TEST_ORDER_DATE = DateTime.Now;
+        private readonly DateTime TEST_ORDER_DATE = DateTime.Now;
 
         [TestInitialize]
         public void setup()
@@ -104,7 +104,7 @@ namespace CheckoutAppTests
             Assert.AreEqual(expectedPriceInCents, actualItem.Key.PriceForQuantity(actualItem.Value));
         }
 
-        private Stream GetTestOrdersStream()
+        private static Stream GetTestOrdersStream()
         {
             return new MemoryStream(Encoding.ASCII.GetBytes(@"PRODUCT_ID, UNITS
                                                               111, 5

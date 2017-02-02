@@ -35,7 +35,7 @@
         }
 
         //Enforce children to provide equals and hashcode since decorators will be stored as keys in map
-        public abstract override bool Equals(object obj); 
+        public abstract override bool Equals(object obj);
 
         public abstract override int GetHashCode();
     }

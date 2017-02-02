@@ -35,7 +35,6 @@ namespace CheckoutApp.Repository
                 _products.FirstOrDefault(
                     product => string.Equals(product.ProductId, productId, StringComparison.OrdinalIgnoreCase));
         }
-
     }
 
     internal sealed class ProductInfoMapper : CsvClassMap<ProductInfo>

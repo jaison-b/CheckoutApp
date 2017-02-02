@@ -31,7 +31,8 @@ namespace CheckoutApp.Models
 
         protected bool Equals(AddOnUnitPromoDecorator other)
         {
-            return GetOrderItem().Equals(other.GetOrderItem()) && _eligibleUnits == other._eligibleUnits && _freeUnits == other._freeUnits;
+            return GetOrderItem().Equals(other.GetOrderItem()) && _eligibleUnits == other._eligibleUnits &&
+                   _freeUnits == other._freeUnits;
         }
 
         public override bool Equals(object obj)
