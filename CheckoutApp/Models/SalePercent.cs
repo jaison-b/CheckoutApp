@@ -2,12 +2,15 @@
 
 namespace CheckoutApp.Models
 {
-    public class SalePercentDecorator : PromotionDecorator
+    /// <summary>
+    ///     Promotion for percent off on sale item
+    /// </summary>
+    public class SalePercent : Promotion
     {
         private readonly int _salePercent;
         private readonly int _thresholdQuantity;
 
-        public SalePercentDecorator(IOrderItem orderItem, int thresholdQuantity, int salePercent) : base(orderItem)
+        public SalePercent(IOrderItem orderItem, int thresholdQuantity, int salePercent) : base(orderItem)
         {
             if (salePercent < 0 || salePercent > 100)
                 throw new ArgumentException("salePercent argument must be in [0, 100]");
@@ -15,16 +18,16 @@ namespace CheckoutApp.Models
             _salePercent = salePercent;
         }
 
-        public override int PriceForQuantity(int quantity)
+        public override int GetPrice(int quantity)
         {
             if (quantity < _thresholdQuantity)
-                return base.PriceForQuantity(quantity);
+                return base.GetPrice(quantity);
             var discountPrice = decimal.Multiply(UnitPrice(), decimal.Divide(_salePercent, 100));
             var salePrice = decimal.Subtract(UnitPrice(), discountPrice);
             return decimal.ToInt32(decimal.Multiply(salePrice, quantity));
         }
 
-        protected bool Equals(SalePercentDecorator other)
+        protected bool Equals(SalePercent other)
         {
             return GetOrderItem().Equals(other.GetOrderItem()) && _thresholdQuantity == other._thresholdQuantity &&
                    _salePercent == other._salePercent;
@@ -34,7 +37,7 @@ namespace CheckoutApp.Models
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((SalePercentDecorator) obj);
+            return obj.GetType() == GetType() && Equals((SalePercent) obj);
         }
 
         public override int GetHashCode()

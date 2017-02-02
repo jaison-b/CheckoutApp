@@ -2,12 +2,16 @@
 
 namespace CheckoutApp.Models
 {
-    public class AddOnUnitPromoDecorator : PromotionDecorator
+    /// <summary>
+    ///     Promotion to capture Add On Promotion deals
+    ///     <para>For e.g Buy 1 Get 1 Free type offers</para>
+    /// </summary>
+    public class AddOnUnitPromo : Promotion
     {
         private readonly int _eligibleUnits;
         private readonly int _freeUnits;
 
-        public AddOnUnitPromoDecorator(IOrderItem orderItem, int eligibleUnits, int freeUnits) : base(orderItem)
+        public AddOnUnitPromo(IOrderItem orderItem, int eligibleUnits, int freeUnits) : base(orderItem)
         {
             if (eligibleUnits < 1)
                 throw new ArgumentException("eligibleUnits must be atleast 1");
@@ -17,19 +21,19 @@ namespace CheckoutApp.Models
             _freeUnits = freeUnits;
         }
 
-        public override int PriceForQuantity(int quantity)
+        public override int GetPrice(int quantity)
         {
             if (quantity < _eligibleUnits)
-                return base.PriceForQuantity(quantity);
+                return base.GetPrice(quantity);
             //Calcution: Free_Unit/Total_Units_To_Buy = discount Percent
             //For e.g Buy one get free - so 1 freeUnits for 2 Units : 1/2 = 0.5 (50%)
-            var discountPercent = decimal.Divide(_freeUnits, (_eligibleUnits + _freeUnits));
-            var basePrice = base.PriceForQuantity(quantity);
+            var discountPercent = decimal.Divide(_freeUnits, _eligibleUnits + _freeUnits);
+            var basePrice = base.GetPrice(quantity);
             var discountAmount = decimal.ToInt32(decimal.Multiply(basePrice, discountPercent));
             return basePrice - discountAmount;
         }
 
-        protected bool Equals(AddOnUnitPromoDecorator other)
+        protected bool Equals(AddOnUnitPromo other)
         {
             return GetOrderItem().Equals(other.GetOrderItem()) && _eligibleUnits == other._eligibleUnits &&
                    _freeUnits == other._freeUnits;
@@ -39,7 +43,7 @@ namespace CheckoutApp.Models
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == this.GetType() && Equals((AddOnUnitPromoDecorator) obj);
+            return obj.GetType() == GetType() && Equals((AddOnUnitPromo) obj);
         }
 
         public override int GetHashCode()

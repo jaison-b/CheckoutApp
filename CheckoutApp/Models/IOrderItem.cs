@@ -5,6 +5,12 @@
         string ItemId();
         string Description();
         int UnitPrice();
-        int PriceForQuantity(int quantity);
+
+        /// <summary>
+        ///     Returns effective price of the item after applying any available qualifying promotions
+        /// </summary>
+        /// <param name="quantity"></param>
+        /// <returns>Effective price in cents</returns>
+        int GetPrice(int quantity);
     }
 }

@@ -1,25 +1,28 @@
 ﻿namespace CheckoutApp.Models
 {
-    public class SalePriceDecorator : PromotionDecorator
+    /// <summary>
+    ///     Promotion for reduced sale pricing for product items
+    /// </summary>
+    public class SalePrice : Promotion
     {
         private readonly int _salePriceInCents;
         private readonly int _thresholdQuantity;
 
-        public SalePriceDecorator(IOrderItem orderItem, int thresholdQuantity, int salePriceInCents)
+        public SalePrice(IOrderItem orderItem, int thresholdQuantity, int salePriceInCents)
             : base(orderItem)
         {
             _thresholdQuantity = thresholdQuantity;
             _salePriceInCents = salePriceInCents;
         }
 
-        public override int PriceForQuantity(int quantity)
+        public override int GetPrice(int quantity)
         {
             if (quantity < _thresholdQuantity)
-                return base.PriceForQuantity(quantity);
+                return base.GetPrice(quantity);
             return _salePriceInCents * quantity;
         }
 
-        protected bool Equals(SalePriceDecorator other)
+        protected bool Equals(SalePrice other)
         {
             return GetOrderItem().Equals(other.GetOrderItem()) && _thresholdQuantity == other._thresholdQuantity &&
                    _salePriceInCents == other._salePriceInCents;
@@ -29,7 +32,7 @@
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((SalePriceDecorator) obj);
+            return obj.GetType() == GetType() && Equals((SalePrice) obj);
         }
 
         public override int GetHashCode()

@@ -11,11 +11,9 @@ namespace CheckoutApp
         public static void Main(string[] args)
         {
             var options = new Options();
-            if (Parser.Default.ParseArguments(args, options))
-            {
-                Console.WriteLine("Checking Out...");
-                CheckOut(options);
-            }
+            if (!Parser.Default.ParseArguments(args, options)) return;
+            Console.WriteLine("Checking Out...");
+            CheckOut(options);
         }
 
         private static void CheckOut(Options options)
@@ -53,7 +51,7 @@ namespace CheckoutApp
                 };
                 help.AddOptions(this);
                 if (LastParserState.Errors.Count <= 0) return help;
-                var errors = help.RenderParsingErrorsText(this, 2); // indent with two spaces
+                var errors = help.RenderParsingErrorsText(this, 2);
                 if (string.IsNullOrEmpty(errors)) return help;
                 help.AddPreOptionsLine(string.Concat(Environment.NewLine, "ERROR(S):"));
                 help.AddPreOptionsLine(errors);

@@ -12,31 +12,31 @@ namespace CheckoutAppTests.Models
         [TestMethod]
         public void PriceForQuantity_OnBuy1Get50PercentOff_ShouldReturnDiscountedPricing()
         {
-            var decorator = new AddOnPercentPromoDecorator(_productItem, 1, 50);
+            var decorator = new AddOnPercentPromo(_productItem, 1, 50);
             var expectedPriceInCents = 3000 + 1500; // 1 fulprice + 1 halfprice
-            Assert.AreEqual(expectedPriceInCents, decorator.PriceForQuantity(2));
+            Assert.AreEqual(expectedPriceInCents, decorator.GetPrice(2));
         }
 
         [TestMethod]
         public void PriceForQuantity_OnAboveEligibleUnits_ShouldStillApplyOnlyEligibleSalePricing()
         {
-            var decorator = new AddOnPercentPromoDecorator(_productItem, 1, 50); //buy one get 50% off
+            var decorator = new AddOnPercentPromo(_productItem, 1, 50); //buy one get 50% off
             var expectedPriceInCents = 9000; // 25% is elgible discount applied on total
-            Assert.AreEqual(expectedPriceInCents, decorator.PriceForQuantity(4));
+            Assert.AreEqual(expectedPriceInCents, decorator.GetPrice(4));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Invalid salePercent Allowed")]
         public void PriceForQuantity_OnInvalidSalePercent_ShouldThrowException()
         {
-            var decorator = new AddOnPercentPromoDecorator(_productItem, 1, 101);
+            var decorator = new AddOnPercentPromo(_productItem, 1, 101);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Invalid eligibleUnits allowed")]
         public void PriceForQuantity_OnInvalidEligibleUnits_ShouldThrowException()
         {
-            var decorator = new AddOnUnitPromoDecorator(_productItem, 0, 50);
+            var decorator = new AddOnUnitPromo(_productItem, 0, 50);
         }
     }
 }

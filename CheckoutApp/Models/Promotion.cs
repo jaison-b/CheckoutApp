@@ -1,10 +1,18 @@
 ﻿namespace CheckoutApp.Models
 {
-    public abstract class PromotionDecorator : IOrderItem
+    /// <summary>
+    ///     Base Class for Promotion Implementations
+    ///     <para>
+    ///         A Decorator Pattern is used to implement Promotions, so <see cref="IOrderItem" />
+    ///         get "decorated" by <see cref="Promotion" /> to help calculate the final effective price for
+    ///         item.
+    ///     </para>
+    /// </summary>
+    public abstract class Promotion : IOrderItem
     {
         private readonly IOrderItem _orderItem;
 
-        protected PromotionDecorator(IOrderItem orderItem)
+        protected Promotion(IOrderItem orderItem)
         {
             _orderItem = orderItem;
         }
@@ -24,9 +32,9 @@
             return _orderItem.UnitPrice();
         }
 
-        public virtual int PriceForQuantity(int quantity)
+        public virtual int GetPrice(int quantity)
         {
-            return _orderItem.PriceForQuantity(quantity);
+            return _orderItem.GetPrice(quantity);
         }
 
         protected IOrderItem GetOrderItem()
@@ -34,7 +42,7 @@
             return _orderItem;
         }
 
-        //Enforce children to provide equals and hashcode since decorators will be stored as keys in map
+        //Enforce children to provide equals and hashcode
         public abstract override bool Equals(object obj);
 
         public abstract override int GetHashCode();

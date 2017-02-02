@@ -2,16 +2,6 @@
 
 namespace CheckoutApp.Repository
 {
-    //Represents type of Promotion
-    public enum PromoType
-    {
-        SalePrice,
-        SalePercent,
-        BundleDiscount,
-        AddOnPercent,
-        AddOnUnit,
-    }
-
     //Simple Value Object to hold Promotion Info
     public class PromotionInfo
     {
@@ -33,7 +23,7 @@ namespace CheckoutApp.Repository
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == this.GetType() && Equals((PromotionInfo) obj);
+            return obj.GetType() == GetType() && Equals((PromotionInfo) obj);
         }
 
         public override int GetHashCode()

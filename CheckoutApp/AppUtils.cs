@@ -8,6 +8,13 @@ namespace CheckoutApp
 {
     internal static class AppUtils
     {
+        /// <summary>
+        ///     Parses csv file to return list of required types
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="inputStream"></param>
+        /// <param name="csvClassMap"></param>
+        /// <returns></returns>
         public static IList<T> ParseCsv<T>(Stream inputStream, Type csvClassMap)
         {
             var csv = new CsvReader(new StreamReader(inputStream));

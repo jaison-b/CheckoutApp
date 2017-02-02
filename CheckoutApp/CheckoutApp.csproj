@@ -58,21 +58,25 @@
   <ItemGroup>
     <Compile Include="AppUtils.cs" />
     <Compile Include="Cart.cs" />
+    <Compile Include="CartFactory.cs" />
     <Compile Include="ICartFactory.cs" />
-    <Compile Include="Models\AddOnPercentPromoDecorator.cs" />
-    <Compile Include="Models\AddOnUnitPromoDecorator.cs" />
-    <Compile Include="Models\BundleDiscountDecorator.cs" />
+    <Compile Include="Models\AddOnPercentPromo.cs" />
+    <Compile Include="Models\AddOnUnitPromo.cs" />
+    <Compile Include="Models\BundleDiscount.cs" />
     <Compile Include="Models\IOrderItem.cs" />
     <Compile Include="Models\ProductItem.cs" />
-    <Compile Include="Models\PromotionDecorator.cs" />
-    <Compile Include="Models\SalePercentDecorator.cs" />
-    <Compile Include="Models\SalePriceDecorator.cs" />
+    <Compile Include="Models\Promotion.cs" />
+    <Compile Include="Models\SalePercent.cs" />
+    <Compile Include="Models\SalePrice.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IProductRepository.cs" />
     <Compile Include="Repository\IPromotionRepository.cs" />
     <Compile Include="Repository\ProductInfo.cs" />
+    <Compile Include="Repository\ProductRepository.cs" />
     <Compile Include="Repository\PromotionInfo.cs" />
+    <Compile Include="Repository\PromotionRepository.cs" />
+    <Compile Include="Repository\PromoType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

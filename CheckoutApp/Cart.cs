@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using CheckoutApp.Models;
-using Colorful;
 using Console = Colorful.Console;
 
 namespace CheckoutApp
@@ -21,30 +20,41 @@ namespace CheckoutApp
         public void Checkout()
         {
             Console.SetCursorPosition(0, Console.CursorTop - 1);
-            Console.WriteAscii("Grocery Co");
+            Console.WriteAscii("Grocery Co", Color.LightGreen);
+            Console.WriteLine("{0:MMM ddd d HH:mm yyyy}", DateTime.Now, Color.LightGreen);
+            Console.WriteLine("");
             PrintLine();
-            Console.WriteLine("| {0,-25} | {1,10} |", "Item", "Cost", Color.Magenta);
+            Console.WriteLine("| {0,-25} | {1,15} | {2,15} |", "Item", "Actual Price", "You Pay", Color.Magenta);
             PrintLine();
+            var totalActualCost = decimal.Zero;
             foreach (var orderItem in _orderItems)
             {
-                var cost = decimal.Divide(orderItem.Key.PriceForQuantity(orderItem.Value), 100);
-                PrintCheckoutItem(orderItem.Key.Description(), cost, Color.Cyan);
+                var effectiveCost = decimal.Divide(orderItem.Key.GetPrice(orderItem.Value), 100);
+                var actualCost = decimal.Divide(orderItem.Key.UnitPrice() * orderItem.Value, 100);
+                totalActualCost += actualCost;
+                Console.WriteLine("| {0,-25} | {1,15:C} | {2,15:C} |", orderItem.Key.Description(),
+                    actualCost, effectiveCost, Color.Cyan);
             }
-            var totalCost = decimal.Divide(GetTotalPriceInCents(), 100);
+            var totalEffectiveCost = decimal.Divide(GetTotalEffectivePrice(), 100);
             PrintLine();
-            PrintCheckoutItem("Total Cost", totalCost, Color.GreenYellow);
+            Console.WriteLine("| {0,-25}   {1,15}   {2,15:C} |", "Total Cost", "", totalEffectiveCost, Color.GreenYellow);
             PrintLine();
-            Console.WriteLine("**** Thank you for shopping with us ****");
+            Console.WriteLine("");
+            Console.WriteLine("  {0,-25}   {1,15:C} Today", "You Saved",
+                GetTotalSaved(totalActualCost, totalEffectiveCost), Color.GreenYellow);
+            Console.WriteLine("");
+            Console.WriteLine("**** Thank you for shopping with us ****", Color.LightGreen);
+        }
+
+        private decimal GetTotalSaved(decimal totalActualCost, decimal totalEffectiveCost)
+        {
+            var totalSaved = decimal.Subtract(totalActualCost, totalEffectiveCost);
+            return totalSaved > 0 ? totalSaved : decimal.Zero;
         }
 
         private static void PrintLine()
         {
-            Console.WriteLine(new string('-', 42));
-        }
-
-        private static void PrintCheckoutItem(string item, decimal cost, Color color)
-        {
-            Console.WriteLine("| {0,-25} | {1,10:C} |", item, cost, color);
+            Console.WriteLine(new string('-', 65));
         }
 
         public IReadOnlyDictionary<IOrderItem, int> GetOrderItems()
@@ -52,9 +62,13 @@ namespace CheckoutApp
             return new ReadOnlyDictionary<IOrderItem, int>(_orderItems);
         }
 
-        public int GetTotalPriceInCents()
+        /// <summary>
+        ///     Returns Total effective price of shopping cart items
+        /// </summary>
+        /// <returns>Effective total price in cents</returns>
+        public int GetTotalEffectivePrice()
         {
-            return _orderItems.Sum(entry => entry.Key.PriceForQuantity(entry.Value));
+            return _orderItems.Sum(entry => entry.Key.GetPrice(entry.Value));
         }
     }
 }

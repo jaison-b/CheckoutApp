@@ -2,12 +2,16 @@
 
 namespace CheckoutApp.Models
 {
-    public class BundleDiscountDecorator : PromotionDecorator
+    /// <summary>
+    ///     Promotion for bundle discounts
+    ///     <para>For e.g Buy 3 for $2.00 type promotion</para>
+    /// </summary>
+    public class BundleDiscount : Promotion
     {
         private readonly int _bundleSize;
         private readonly int _discountedPriceInCents;
 
-        public BundleDiscountDecorator(IOrderItem orderItem, int bundleSize, int discountedPriceInCents)
+        public BundleDiscount(IOrderItem orderItem, int bundleSize, int discountedPriceInCents)
             : base(orderItem)
         {
             if (bundleSize < 2)
@@ -16,15 +20,15 @@ namespace CheckoutApp.Models
             _discountedPriceInCents = discountedPriceInCents;
         }
 
-        public override int PriceForQuantity(int quantity)
+        public override int GetPrice(int quantity)
         {
             var bundles = quantity / _bundleSize;
-            if (bundles < 1) return base.PriceForQuantity(quantity);
+            if (bundles < 1) return base.GetPrice(quantity);
             var remainder = quantity % _bundleSize;
             return bundles * _discountedPriceInCents + remainder * UnitPrice();
         }
 
-        protected bool Equals(BundleDiscountDecorator other)
+        protected bool Equals(BundleDiscount other)
         {
             return GetOrderItem().Equals(other.GetOrderItem()) && _bundleSize == other._bundleSize &&
                    _discountedPriceInCents == other._discountedPriceInCents;
@@ -34,7 +38,7 @@ namespace CheckoutApp.Models
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((BundleDiscountDecorator) obj);
+            return obj.GetType() == GetType() && Equals((BundleDiscount) obj);
         }
 
         public override int GetHashCode()
